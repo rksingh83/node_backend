@@ -8,7 +8,7 @@ const {
     getUsers
 } = require('../controllers/user')
 
-const user = (req, res) => res.send(["Rakesh", "Singh"])
+const user = (req, res) => res.send()
 router.route('/')
     .get(getUsers)
     .post(createUser)
