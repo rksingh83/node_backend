@@ -2,8 +2,12 @@ const express = require('express');
 const {
     createTask,
     getTasks,
-    updateTask
+    updateTask,
+    getTask
 } = require('../controllers/task');
+const {
+    get
+} = require('mongoose');
 const router = express.Router();
 
 router.route('/')
@@ -12,5 +16,6 @@ router.route('/')
 
 router.route('/:id')
     .put(updateTask)
+    .get(getTask)
 
 module.exports = router;

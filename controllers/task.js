@@ -1,28 +1,29 @@
 const Task = require('../models/Task');
+const asyncHandler = require('../middleware/asyncHandler');
+exports.createTask = asyncHandler(async (req, res, next) => {
+    const task = await Task.create(req.body);
+    res.status(201).json(task)
+});
 
-exports.createTask = async (req, res) => {
-    try {
-        const task = await Task.create(req.body);
-        res.status(201).json(task)
-    } catch (error) {
-        res.status(500).json(error.message)
-    }
-}
+exports.getTasks = asyncHandler(async (req, res) => {
+    const tasks = await Task.find().populate('developer', 'name -_id');
+    res.status(201).json(tasks)
 
-exports.getTasks = async (req, res) => {
-    try {
-        const tasks = await Task.find().populate('developer','name -_id');
-        res.status(201).json(tasks)
-    } catch (error) {
-        res.status(500).json(error.message)
-    }
-}
+});
 
-exports.updateTask = async (req, res) => {
-    try {
-        const task = await Task.findByIdAndUpdate(req.params.id, req.body);
-        res.status(201).json(task)
-    } catch (error) {
-        res.status(500).json(error.message)
-    }
-}
+//@Desc GET a task by Id  ;
+//@Route GET/api/v1/task/id;
+//@Access Public
+exports.getTask = asyncHandler(async (req, res) => {
+    const tasks = await Task.findById(req.params.id).populate('developer', 'name -_id');
+    res.status(201).json(tasks)
+
+});
+
+//@Desc Update a Task ;
+//@Route PUT/api/v1/task/id;
+//@Access Public
+exports.updateTask = asyncHandler(async (req, res) => {
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body);
+    res.status(201).json(task)
+})

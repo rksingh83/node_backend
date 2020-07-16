@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const bcryptjs = require('bcryptjs')
 const mongooseValidator = require("mongoose-unique-validator");
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -17,7 +19,16 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: [String],
+    enum:['admin','developer'],
+    default:'developer'
+
   },
 });
+// encrypt the password
 UserSchema.plugin(mongooseValidator);
+UserSchema.pre('save' , async function(next){
+  const salt =  await bcryptjs.genSalt(10);
+  console.log(salt ,this.password)
+  this.password  = await bcryptjs.hash(this.password,salt)
+})
 module.exports = mongoose.model("User", UserSchema);
