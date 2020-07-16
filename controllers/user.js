@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Task = require("../models/Task");
+const asyncHandler = require('../middleware/asyncHandler');
 exports.getUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id).lean();
@@ -27,23 +28,16 @@ exports.getUsers = async (req, res) => {
     })
 };
 
-exports.createUser = async (req, res) => {
-    try {
+exports.createUser = asyncHandler(async (req, res) => {
+
         const {password} = req.body;
         const user = await User.create(req.body);
         return res.status(201).json({
             success: true,
-            message: err.message,
+            message: "User registered Successfully",
             data: user,
         });
-    } catch (err) {
-        return res.status(400).json({
-            success: false,
-            message: err.message,
-            data: null,
-        });
-    }
-};
+});
 
 exports.updateUser = async (req, res) => {
     try {
